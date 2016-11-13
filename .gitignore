@@ -35,6 +35,7 @@ captures/
 # Intellij
 *.iml
 .idea/workspace.xml
+Gaming-Assistant/.idea/
 
 # Keystore files
 *.jks
