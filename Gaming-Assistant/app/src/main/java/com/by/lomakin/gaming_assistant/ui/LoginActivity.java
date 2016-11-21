@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.by.lomakin.gaming_assistant.R;
 import com.by.lomakin.gaming_assistant.api.VkAuthConstants;
+import com.by.lomakin.gaming_assistant.api.VkAuthUtils;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKSdk;
@@ -18,13 +19,23 @@ import com.vk.sdk.api.VKError;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private VkAuthUtils vkAuthUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        vkAuthUtils = new VkAuthUtils(this);
+        if (vkAuthUtils.checkTokenInSharedPreferences()){
+            String accessToken = vkAuthUtils.getTokenFromSharedPreferences();
+            Toast.makeText(LoginActivity.this, accessToken, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(LoginActivity.this, "Token is null", Toast.LENGTH_LONG).show();
+        }
+
         Button loginButton = (Button) findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(new View.OnClickListener(){
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 VKSdk.login(LoginActivity.this, VkAuthConstants.SCOPE);
@@ -37,11 +48,12 @@ public class LoginActivity extends AppCompatActivity {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {
-                //Log.d("Access Token", res.accessToken);
+                vkAuthUtils.saveTokenToSharedPreferences(res.accessToken);
             }
+
             @Override
             public void onError(VKError error) {
-                Toast.makeText(LoginActivity.this,R.string.auth_error,Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, R.string.auth_error, Toast.LENGTH_LONG).show();
             }
         })) {
             super.onActivityResult(requestCode, resultCode, data);
