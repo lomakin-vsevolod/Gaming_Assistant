@@ -3,7 +3,6 @@ package com.by.lomakin.gaming_assistant.ui;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -17,6 +16,7 @@ import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
 
+
 public class LoginActivity extends AppCompatActivity {
 
     private VkAuthUtils vkAuthUtils;
@@ -28,10 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
         vkAuthUtils = new VkAuthUtils(this);
         if (vkAuthUtils.checkTokenInSharedPreferences()){
-            String accessToken = vkAuthUtils.getTokenFromSharedPreferences();
-            Toast.makeText(LoginActivity.this, accessToken, Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(LoginActivity.this, "Token is null", Toast.LENGTH_LONG).show();
+            startMainActivity();
         }
 
         Button loginButton = (Button) findViewById(R.id.loginButton);
@@ -49,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResult(VKAccessToken res) {
                 vkAuthUtils.saveTokenToSharedPreferences(res.accessToken);
+                startMainActivity();
             }
 
             @Override
@@ -58,6 +56,11 @@ public class LoginActivity extends AppCompatActivity {
         })) {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+    private void startMainActivity (){
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }
