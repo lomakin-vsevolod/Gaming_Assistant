@@ -2,25 +2,24 @@ package com.by.lomakin.gaming_assistant.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
 import com.by.lomakin.gaming_assistant.R;
 import com.by.lomakin.gaming_assistant.ui.fragments.CategoriesFragment;
 import com.by.lomakin.gaming_assistant.ui.fragments.FriendListFragment;
 import com.by.lomakin.gaming_assistant.ui.fragments.ProfileFragment;
 import com.by.lomakin.gaming_assistant.ui.fragments.SearchFragment;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
