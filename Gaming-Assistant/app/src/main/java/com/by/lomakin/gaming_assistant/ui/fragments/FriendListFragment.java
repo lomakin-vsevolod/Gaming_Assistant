@@ -36,7 +36,6 @@ public class FriendListFragment extends Fragment implements LoaderManager.Loader
     private ProgressBar progressBar;
     private TextView textView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private FriendListAdapter friendListAdapter;
     private LoaderManager.LoaderCallbacks<VKList<VKApiUser>> loaderCallbacks;
 
     public FriendListFragment() {
@@ -93,7 +92,7 @@ public class FriendListFragment extends Fragment implements LoaderManager.Loader
             swipeRefreshLayout.setRefreshing(false);
         }
         if (friendList != null) {
-            friendListAdapter = new FriendListAdapter(getActivity(), friendList);
+            FriendListAdapter friendListAdapter = new FriendListAdapter(getActivity(), friendList);
             listView.setAdapter(friendListAdapter);
             listView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override

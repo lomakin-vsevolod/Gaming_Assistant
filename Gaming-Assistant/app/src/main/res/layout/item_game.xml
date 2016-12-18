@@ -12,11 +12,11 @@
         android:layout_width="54dp"
         android:layout_height="54dp"
         android:scaleType="centerCrop"
-        android:id="@+id/friend_avatar"
+        android:id="@+id/game_image"
         android:layout_marginRight="8dip" />
 
     <TextView
-        android:id="@+id/friend_name"
+        android:id="@+id/game_name"
         android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

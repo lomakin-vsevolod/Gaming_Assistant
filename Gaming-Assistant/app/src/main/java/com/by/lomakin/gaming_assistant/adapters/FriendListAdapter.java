@@ -18,17 +18,17 @@ import com.vk.sdk.api.model.VKList;
  * Created by Nuclear on 10.12.2016.
  */
 
-public class FriendListAdapter extends BaseAdapter{
+public class FriendListAdapter extends BaseAdapter {
 
     private VKList<VKApiUser> friends;
     private Context context;
 
-    public FriendListAdapter(Context context, VKList<VKApiUser> friends){
-        this.context=context;
-        this.friends=friends;
+    public FriendListAdapter(Context context, VKList<VKApiUser> friends) {
+        this.context = context;
+        this.friends = friends;
     }
 
-    private static class Holder{
+    private static class Holder {
         ImageView friendImage;
         TextView friendName;
     }
