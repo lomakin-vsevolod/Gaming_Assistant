@@ -4,29 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.by.lomakin.gaming_assistant.ui.fragments.CategoriesFragment">
-
-    <LinearLayout
-        android:id="@+id/linear_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <EditText android:id="@+id/text_category"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:inputType="text">
-        </EditText>
-        <Button android:text="@string/add"
-            android:id="@+id/add_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        </Button>
-
-    </LinearLayout>
-
-
-
+    tools:context="com.by.lomakin.gaming_assistant.ui.fragments.SearchFragment">
 
     <ProgressBar
         android:id="@+id/progress"
@@ -44,10 +22,8 @@
         android:visibility="gone" />
 
     <ListView
-        android:id="@+id/category_list"
+        android:id="@+id/game_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
 
 </LinearLayout>

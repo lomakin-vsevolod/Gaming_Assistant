@@ -26,4 +26,10 @@ public class GiantBombApiConstants {
     private final static String FIELD_LIST_GAMES = FIELD_LIST + "id,name,api_detail_url,image";
     public final static String GAMES_URL = API_GAMES + API_KEY_VALUE + "&" + FORMAT_JSON + "&" + LIMIT_VALUE + "&" + FIELD_LIST_GAMES + "&" + FILTER;
 
+    public final static String API_GAME = API_URL + "game/";
+    private final static String FIELD_LIST_GAME = FIELD_LIST + "id,name,api_detail_url,image,deck,developers";
+    public final static String GAME_URL = "/?" + API_KEY_VALUE + "&" + FORMAT_JSON + "&" + FIELD_LIST_GAME;
+
+
+
 }

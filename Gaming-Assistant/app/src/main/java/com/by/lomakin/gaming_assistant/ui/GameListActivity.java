@@ -1,19 +1,13 @@
-package com.by.lomakin.gaming_assistant.ui.fragments;
-
+package com.by.lomakin.gaming_assistant.ui;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,79 +16,83 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.by.lomakin.gaming_assistant.R;
-import com.by.lomakin.gaming_assistant.adapters.FriendListAdapter;
 import com.by.lomakin.gaming_assistant.adapters.SearchAdapter;
+import com.by.lomakin.gaming_assistant.api.VkAuthUtils;
+import com.by.lomakin.gaming_assistant.bo.Category;
 import com.by.lomakin.gaming_assistant.bo.Game;
+import com.by.lomakin.gaming_assistant.bo.GameFirebase;
 import com.by.lomakin.gaming_assistant.bo.GamesResponse;
 import com.by.lomakin.gaming_assistant.loaders.SearchLoader;
-import com.by.lomakin.gaming_assistant.ui.GameInfoActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-import com.vk.sdk.api.model.VKApiUser;
-import com.vk.sdk.api.model.VKList;
 
+import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class SearchFragment extends Fragment implements LoaderManager.LoaderCallbacks<GamesResponse> {
+public class GameListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<GamesResponse> {
 
     public static final String SEARCH_STRING = "search_string";
-    public static final String GAME_ID = "GAME_ID";
 
     private static final int SEARCH_LOADER_ID = 1;
 
-    private LoaderManager.LoaderCallbacks<GamesResponse> loaderCallbacks;
+    private DatabaseReference databaseReference;
     private ListView listView;
     private ProgressBar progressBar;
     private TextView textView;
-    private SearchView searchView;
-
-    public SearchFragment() {
-        // Required empty public constructor
-    }
-
+    private VkAuthUtils vkAuthUtils;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        listView = (ListView) view.findViewById(R.id.search_list);
-        progressBar = (ProgressBar) view.findViewById(R.id.progress);
-        textView = (TextView) view.findViewById(R.id.empty);
-        loaderCallbacks = this;
-        searchView = (SearchView) view.findViewById(R.id.search_view);
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setIconifiedByDefault(false);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_game_list);
+        listView = (ListView) findViewById(R.id.game_list);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
+        textView = (TextView) findViewById(R.id.empty);
+        vkAuthUtils = new VkAuthUtils(this);
+        showProgress();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("users").child(vkAuthUtils.getUserIdFromSharedPreferences()).child("games").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                showProgress();
-                Bundle args = new Bundle();
-                args.putString(SEARCH_STRING, query);
-                getLoaderManager().restartLoader(SEARCH_LOADER_ID, args, loaderCallbacks);
-                return true;
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<GameFirebase> list = new ArrayList<GameFirebase>();
+
+                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                    GameFirebase gameFirebase = new GameFirebase();
+                    gameFirebase.setGameId(child.getKey());
+                    list.add(gameFirebase);
+
+                }
+                String ids = ",id:";
+                for (GameFirebase gameFirebase : list){
+                    Log.d("test",gameFirebase.getGameId());
+                    ids = ids + gameFirebase.getGameId() + "|";
+                }
+                startLoader(ids);
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                return true;
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
+
+    }
+
+    public void startLoader(String ids){
+        Bundle args = new Bundle();
+        args.putString(SEARCH_STRING, ids);
+        getSupportLoaderManager().initLoader(SEARCH_LOADER_ID, args, this);
     }
 
     @Override
     public Loader<GamesResponse> onCreateLoader(int id, Bundle args) {
         Loader<GamesResponse> loader = null;
         if (id == SEARCH_LOADER_ID) {
-            loader = new SearchLoader(getActivity(), args);
+            loader = new SearchLoader(this, args);
         }
         return loader;
     }
@@ -117,9 +115,9 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
 
     public void setData(List<Game> games) {
         if (games != null) {
-            final SearchAdapter searchAdapter = new SearchAdapter(getActivity(), games);
+            final SearchAdapter searchAdapter = new SearchAdapter(this, games);
             listView.setAdapter(searchAdapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     int gameId = searchAdapter.getId(position);
@@ -128,19 +126,19 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                     intent.putExtra(GAME_ID, Integer.toString(gameId));
                     startActivity(intent);
                 }
-            });
+            });*/
             listView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView view, int scrollState) {
                     switch (scrollState) {
                         case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                            Picasso.with(getContext()).resumeTag(getContext());
+                            Picasso.with(getApplicationContext()).resumeTag(getApplicationContext());
                             break;
                         case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-                            Picasso.with(getContext()).pauseTag(getContext());
+                            Picasso.with(getApplicationContext()).pauseTag(getApplicationContext());
                             break;
                         case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                            Picasso.with(getContext()).pauseTag(getContext());
+                            Picasso.with(getApplicationContext()).pauseTag(getApplicationContext());
                             break;
                     }
                 }
@@ -152,7 +150,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
             });
 
         } else {
-            Toast.makeText(getActivity(), "Check your internet connection!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Check your internet connection!", Toast.LENGTH_SHORT).show();
             listView.setVisibility(View.GONE);
             textView.setVisibility(View.VISIBLE);
         }

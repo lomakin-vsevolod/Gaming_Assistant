@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResult(VKAccessToken res) {
                 vkAuthUtils.saveTokenToSharedPreferences(res.accessToken);
+                vkAuthUtils.saveUserIdToSharedPreferences(res.userId);
                 startMainActivity();
             }
 

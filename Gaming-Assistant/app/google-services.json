@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "42965839176",
+    "firebase_url": "https://gaming-assistant-24393.firebaseio.com",
+    "project_id": "gaming-assistant",
+    "storage_bucket": "gaming-assistant.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42965839176:android:a1d710339185f507",
+        "android_client_info": {
+          "package_name": "com.by.lomakin.gaming_assistant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "42965839176-9qkp9jg7p8lo5i14ovm5ju3jgpdideuh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.by.lomakin.gaming_assistant",
+            "certificate_hash": "3FA1E3C80981CE48690BB3797FF408992CAE77BC"
+          }
+        },
+        {
+          "client_id": "42965839176-ovr0k551u6183srv06isi26154vp0e8d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfsG8EUz9vu6FKK6Td92qXXa60_LfGprk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "42965839176-ovr0k551u6183srv06isi26154vp0e8d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

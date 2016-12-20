@@ -25,7 +25,11 @@
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.GameInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.GameListActivity"></activity>
     </application>
 
 </manifest>

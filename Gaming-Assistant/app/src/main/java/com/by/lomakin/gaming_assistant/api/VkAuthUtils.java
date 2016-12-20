@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 
 public class VkAuthUtils {
     private static final String VK_ACCESS_TOKEN_KEY = "VK_ACCESS_TOKEN";
+    private static final String VK_USER_ID = "VK_USER_ID";
 
     private static final String PREFS_NAME = "SharedPreferences";
 
@@ -41,4 +42,15 @@ public class VkAuthUtils {
         return sharedPreferences.getString(VK_ACCESS_TOKEN_KEY, null);
     }
 
+    public void saveUserIdToSharedPreferences(String userId){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(VK_USER_ID, userId);
+        editor.apply();
+    }
+
+    public String getUserIdFromSharedPreferences() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, 0);
+        return sharedPreferences.getString(VK_USER_ID, null);
+    }
 }

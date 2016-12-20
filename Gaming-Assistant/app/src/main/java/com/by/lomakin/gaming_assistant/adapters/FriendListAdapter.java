@@ -14,6 +14,8 @@ import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+
 /**
  * Created by Nuclear on 10.12.2016.
  */
@@ -60,7 +62,7 @@ public class FriendListAdapter extends BaseAdapter {
         }
         Holder h = (Holder) convertView.getTag();
         h.friendName.setText(friends.get(position).first_name + " " + friends.get(position).last_name);
-        Picasso.with(context).load(friends.get(position).photo_100).tag(context).into(h.friendImage);
+        Picasso.with(context).load(friends.get(position).photo_100).tag(context).into(h.friendImage); //.transform(new RoundedCornersTransformation(100,100))
         return convertView;
     }
 }

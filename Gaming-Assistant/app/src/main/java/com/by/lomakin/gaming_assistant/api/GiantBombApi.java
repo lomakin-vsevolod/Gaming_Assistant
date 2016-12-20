@@ -2,6 +2,7 @@ package com.by.lomakin.gaming_assistant.api;
 
 import android.util.Log;
 
+import com.by.lomakin.gaming_assistant.bo.GameResponse;
 import com.by.lomakin.gaming_assistant.bo.GamesResponse;
 import com.google.gson.Gson;
 
@@ -67,6 +68,17 @@ public class GiantBombApi {
             String response = doApiRequest(GiantBombApiConstants.GAMES_URL + "name:" + searchString);
             GamesResponse gamesResponse = gson.fromJson(response,GamesResponse.class);
             return gamesResponse;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static GameResponse getGameById(String id) {
+        try {
+            String response = doApiRequest(GiantBombApiConstants.API_GAME + id + GiantBombApiConstants.GAME_URL);
+            GameResponse gameResponse = gson.fromJson(response,GameResponse.class);
+            return gameResponse;
         } catch (Exception e) {
             e.printStackTrace();
         }
