@@ -50,6 +50,10 @@ public class FriendListAdapter extends BaseAdapter {
         return friends.get(position).hashCode();
     }
 
+    public int getId(int position) {
+        return friends.get(position).id;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -63,6 +67,7 @@ public class FriendListAdapter extends BaseAdapter {
         Holder h = (Holder) convertView.getTag();
         h.friendName.setText(friends.get(position).first_name + " " + friends.get(position).last_name);
         Picasso.with(context).load(friends.get(position).photo_100).tag(context).into(h.friendImage); //.transform(new RoundedCornersTransformation(100,100))
+
         return convertView;
     }
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +48,8 @@ public class GameInfoActivity extends AppCompatActivity implements LoaderManager
     private TextView developerTextView;
     private VkAuthUtils vkAuthUtils;
     private FloatingActionButton fab;
+    private CoordinatorLayout coordinatorLayout;
+    private ProgressBar progressBar;
     private List<Category> categories;
     private Game game;
 
@@ -62,6 +66,9 @@ public class GameInfoActivity extends AppCompatActivity implements LoaderManager
         setSupportActionBar(toolbar);
         vkAuthUtils = new VkAuthUtils(this);
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
+        showProgress();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.child("users").child(vkAuthUtils.getUserIdFromSharedPreferences()).child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -125,6 +132,7 @@ public class GameInfoActivity extends AppCompatActivity implements LoaderManager
         } else {
             setData(null);
         }
+        dismissProgress();
     }
 
     @Override
@@ -152,9 +160,19 @@ public class GameInfoActivity extends AppCompatActivity implements LoaderManager
 
 
         } else {
-           /* Toast.makeText(getActivity(), "Check your internet connection!", Toast.LENGTH_SHORT).show();
-            listView.setVisibility(View.GONE);
-            textView.setVisibility(View.VISIBLE);*/
+            Toast.makeText(this, "Check your internet connection!", Toast.LENGTH_SHORT).show();
+            //listView.setVisibility(View.GONE);
+            //textView.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+        coordinatorLayout.setVisibility(View.GONE);
+    }
+
+    public void dismissProgress () {
+        progressBar.setVisibility(View.GONE);
+        coordinatorLayout.setVisibility(View.VISIBLE);
     }
 }

@@ -50,6 +50,7 @@ import static com.by.lomakin.gaming_assistant.ui.fragments.SearchFragment.GAME_I
 public class CategoriesFragment extends Fragment {
 
     public static final String CATEGORY_ID = "CATEGORY_ID";
+    public static final String USER_ID = "USER_ID";
 
     private DatabaseReference databaseReference;
 
@@ -123,7 +124,7 @@ public class CategoriesFragment extends Fragment {
 
     public void setData(List<Category> categories) {
         if (categories != null) {
-            final CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categories);
+            final CategoriesAdapter categoriesAdapter = new CategoriesAdapter(getActivity(), categories,true);
             listView.setAdapter(categoriesAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -132,6 +133,7 @@ public class CategoriesFragment extends Fragment {
                     Log.d("catId",categoryId);
                     Intent intent = new Intent(getActivity(), GameListActivity.class);
                     intent.putExtra(CATEGORY_ID, categoryId);
+                    intent.putExtra(USER_ID, vkAuthUtils.getUserIdFromSharedPreferences());
                     startActivity(intent);
                 }
             });

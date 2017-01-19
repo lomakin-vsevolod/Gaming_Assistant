@@ -11,6 +11,11 @@ public class VkApiConstants {
     public final static String NICKNAME = "nickname";
     public final static String PHOTO_50 = "photo_50";
     public final static String PHOTO_100 = "photo_100";
+    public final static String PHOTO_400_ORIG = "photo_400_orig";
+    public final static String COUNTRY = "country";
+    public final static String STATUS = "status";
+    public final static String BDATE = "bdate";
+
     //Parameters
     public final static String ORDER = "order";
     public final static String NAME = "name";

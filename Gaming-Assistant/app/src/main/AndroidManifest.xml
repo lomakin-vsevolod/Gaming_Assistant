@@ -29,7 +29,11 @@
         <activity
             android:name=".ui.GameInfoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.GameListActivity"></activity>
+        <activity android:name=".ui.GameListActivity" />
+        <activity
+            android:name=".ui.ProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.CategoriesActivity"></activity>
     </application>
 
 </manifest>

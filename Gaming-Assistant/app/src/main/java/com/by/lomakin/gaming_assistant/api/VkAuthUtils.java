@@ -11,7 +11,7 @@ public class VkAuthUtils {
     private static final String VK_ACCESS_TOKEN_KEY = "VK_ACCESS_TOKEN";
     private static final String VK_USER_ID = "VK_USER_ID";
 
-    private static final String PREFS_NAME = "SharedPreferences";
+    public static final String PREFS_NAME = "SharedPreferences";
 
     private Context context;
 
@@ -52,5 +52,11 @@ public class VkAuthUtils {
     public String getUserIdFromSharedPreferences() {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, 0);
         return sharedPreferences.getString(VK_USER_ID, null);
+    }
+    public void deleteSharedPreferences(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME,0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
     }
 }

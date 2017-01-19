@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Game {
 
-    public Game(int id, String apiDetailUrl, String name, Image image, String deck, List<Developer> developers ) {
+    public Game(int id, String apiDetailUrl, String name, Image image, String deck, List<Developer> developers) {
         this.id = id;
         this.apiDetailUrl = apiDetailUrl;
         this.name = name;
@@ -61,6 +61,21 @@ public class Game {
         return developers;
     }
 
+    public class Developer {
+        @SerializedName("id")
+        private int id;
+        @SerializedName("name")
+        private String name;
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
     public class Image {
 
         @SerializedName("icon_url")
@@ -107,20 +122,4 @@ public class Game {
         }
 
     }
-
-    public class Developer {
-        @SerializedName("id")
-        private int id;
-        @SerializedName("name")
-        private String name;
-
-        public int getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
 }

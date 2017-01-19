@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.by.lomakin.gaming_assistant.R;
+import com.by.lomakin.gaming_assistant.adapters.GameListAdapter;
 import com.by.lomakin.gaming_assistant.adapters.SearchAdapter;
 import com.by.lomakin.gaming_assistant.api.VkAuthUtils;
 import com.by.lomakin.gaming_assistant.bo.Category;
@@ -23,6 +24,7 @@ import com.by.lomakin.gaming_assistant.bo.Game;
 import com.by.lomakin.gaming_assistant.bo.GameFirebase;
 import com.by.lomakin.gaming_assistant.bo.GamesResponse;
 import com.by.lomakin.gaming_assistant.loaders.SearchLoader;
+import com.by.lomakin.gaming_assistant.ui.fragments.CategoriesFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,6 +46,9 @@ public class GameListActivity extends AppCompatActivity implements LoaderManager
     private ProgressBar progressBar;
     private TextView textView;
     private VkAuthUtils vkAuthUtils;
+    private String categoryId;
+    private String userId;
+    private boolean showDeleteButton = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +58,14 @@ public class GameListActivity extends AppCompatActivity implements LoaderManager
         progressBar = (ProgressBar) findViewById(R.id.progress);
         textView = (TextView) findViewById(R.id.empty);
         vkAuthUtils = new VkAuthUtils(this);
+        categoryId = getIntent().getStringExtra(CategoriesFragment.CATEGORY_ID);
+        userId = getIntent().getStringExtra(CategoriesFragment.USER_ID);
+        if (userId.equals(vkAuthUtils.getUserIdFromSharedPreferences())){
+            showDeleteButton = true;
+        }
         showProgress();
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("users").child(vkAuthUtils.getUserIdFromSharedPreferences()).child("games").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("users").child(userId).child("categories").child(categoryId).child("games").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<GameFirebase> list = new ArrayList<GameFirebase>();
@@ -79,6 +89,31 @@ public class GameListActivity extends AppCompatActivity implements LoaderManager
 
             }
         });
+
+        /*databaseReference.child("users").child(vkAuthUtils.getUserIdFromSharedPreferences()).child("games").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<GameFirebase> list = new ArrayList<GameFirebase>();
+
+                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                    GameFirebase gameFirebase = new GameFirebase();
+                    gameFirebase.setGameId(child.getKey());
+                    list.add(gameFirebase);
+
+                }
+                String ids = ",id:";
+                for (GameFirebase gameFirebase : list){
+                    Log.d("test",gameFirebase.getGameId());
+                    ids = ids + gameFirebase.getGameId() + "|";
+                }
+                startLoader(ids);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
 
     }
 
@@ -115,8 +150,8 @@ public class GameListActivity extends AppCompatActivity implements LoaderManager
 
     public void setData(List<Game> games) {
         if (games != null) {
-            final SearchAdapter searchAdapter = new SearchAdapter(this, games);
-            listView.setAdapter(searchAdapter);
+            final GameListAdapter gameListAdapter = new GameListAdapter(this, games, showDeleteButton,categoryId);
+            listView.setAdapter(gameListAdapter);
             /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

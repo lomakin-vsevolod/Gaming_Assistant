@@ -1,5 +1,6 @@
 package com.by.lomakin.gaming_assistant.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.by.lomakin.gaming_assistant.R;
 import com.by.lomakin.gaming_assistant.api.VkApiConstants;
+import com.by.lomakin.gaming_assistant.api.VkAuthUtils;
 import com.by.lomakin.gaming_assistant.ui.fragments.CategoriesFragment;
 import com.by.lomakin.gaming_assistant.ui.fragments.FriendListFragment;
 import com.by.lomakin.gaming_assistant.ui.fragments.ProfileFragment;
@@ -79,7 +81,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onComplete(VKResponse response) {
                 VKList<VKApiUser> user = (VKList<VKApiUser>) response.parsedModel;
-                Log.d("tset",user.get(0).first_name + " " + user.get(0).last_name);
                 textView.setText(user.get(0).first_name + " " + user.get(0).last_name);
                 Picasso.with(getApplicationContext()).load(user.get(0).photo_100).into(imageView);
             }
@@ -130,6 +131,13 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.search:
                 fragment = new SearchFragment();
+                break;
+            case R.id.sign_out:
+                VkAuthUtils vkAuthUtils = new VkAuthUtils(this);
+                vkAuthUtils.deleteSharedPreferences();
+                Intent intent = new Intent(this,LoginActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             default:
                 break;

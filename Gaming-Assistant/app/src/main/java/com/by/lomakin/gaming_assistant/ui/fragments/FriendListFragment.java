@@ -2,16 +2,19 @@ package com.by.lomakin.gaming_assistant.ui.fragments;
 
 
 import android.app.Application;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,6 +23,7 @@ import android.widget.Toast;
 import com.by.lomakin.gaming_assistant.R;
 import com.by.lomakin.gaming_assistant.adapters.FriendListAdapter;
 import com.by.lomakin.gaming_assistant.loaders.FriendListLoader;
+import com.by.lomakin.gaming_assistant.ui.ProfileActivity;
 import com.squareup.picasso.Picasso;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.model.VKApiUser;
@@ -31,6 +35,7 @@ import com.vk.sdk.api.model.VKList;
 public class FriendListFragment extends Fragment implements LoaderManager.LoaderCallbacks<VKList<VKApiUser>> {
 
     private static final int FRIEND_LIST_LOADER_ID = 1;
+    public static final String USER_ID = "USER_ID";
 
     private ListView listView;
     private ProgressBar progressBar;
@@ -92,8 +97,18 @@ public class FriendListFragment extends Fragment implements LoaderManager.Loader
             swipeRefreshLayout.setRefreshing(false);
         }
         if (friendList != null) {
-            FriendListAdapter friendListAdapter = new FriendListAdapter(getActivity(), friendList);
+            final FriendListAdapter friendListAdapter = new FriendListAdapter(getActivity(), friendList);
             listView.setAdapter(friendListAdapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String userId = Integer.toString(friendListAdapter.getId(position));
+                    Log.d("userId",userId);
+                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                    intent.putExtra(USER_ID, userId);
+                    startActivity(intent);
+                }
+            });
             listView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView view, int scrollState) {

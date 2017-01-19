@@ -12,9 +12,7 @@ import android.widget.TextView;
 
 import com.by.lomakin.gaming_assistant.R;
 import com.by.lomakin.gaming_assistant.api.VkAuthUtils;
-import com.by.lomakin.gaming_assistant.bo.Category;
 import com.by.lomakin.gaming_assistant.bo.Game;
-import com.by.lomakin.gaming_assistant.ui.fragments.CategoriesFragment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -22,73 +20,83 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /**
- * Created by Nuclear on 20.12.2016.
+ * Created by Nuclear on 19.12.2016.
  */
 
-public class CategoriesAdapter extends BaseAdapter {
-    private List<Category> categories;
+public class GameListAdapter extends BaseAdapter {
+
+    private List<Game> games;
     private Context context;
     private DatabaseReference databaseReference;
     private VkAuthUtils vkAuthUtils;
     private boolean showDeleteButton = false;
+    private String categoryId;
 
-    public CategoriesAdapter(Context context, List<Category> categories) {
+
+    public GameListAdapter(Context context, List<Game> games) {
         this.context = context;
-        this.categories = categories;
+        this.games = games;
         databaseReference = FirebaseDatabase.getInstance().getReference();
         vkAuthUtils = new VkAuthUtils(this.context);
     }
 
-    public CategoriesAdapter(Context context, List<Category> categories, boolean showDeleteButton) {
-        this(context,categories);
+    public GameListAdapter(Context context, List<Game> games, boolean showDeleteButton, String categoryId) {
+        this(context,games);
         this.showDeleteButton=showDeleteButton;
+        this.categoryId=categoryId;
     }
 
     private static class Holder {
-        TextView categoryName;
+        ImageView gameImage;
+        TextView gameName;
         ImageButton imageButton;
     }
 
     @Override
     public int getCount() {
-        return categories.size();
+        return games.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return categories.get(position);
+        return games.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return categories.get(position).hashCode();
+        return games.get(position).hashCode();
     }
 
-    public String getId(int position) {
-        return categories.get(position).getId();
+    public int getId(int position) {
+        return games.get(position).getId();
     }
 
     @Override
-    public View getView(final int position, View convertView, final ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.item_category, parent, false);
-            CategoriesAdapter.Holder holder = new CategoriesAdapter.Holder();
-            holder.categoryName = (TextView) convertView.findViewById(R.id.category_name);
+            convertView = inflater.inflate(R.layout.item_game, parent, false);
+            Holder holder = new GameListAdapter.Holder();
+            holder.gameName = (TextView) convertView.findViewById(R.id.game_name);
+            holder.gameImage = (ImageView) convertView.findViewById(R.id.game_image);
             holder.imageButton = (ImageButton) convertView.findViewById(R.id.image_button);
             convertView.setTag(holder);
         }
-        CategoriesAdapter.Holder h = (CategoriesAdapter.Holder) convertView.getTag();
-        h.categoryName.setText(categories.get(position).getName());
+        Holder h = (Holder) convertView.getTag();
+        h.gameName.setText(games.get(position).getName());
+        if (games.get(position).getImage() != null){
+            Picasso.with(context).load(games.get(position).getImage().getIconUrl()).tag(context).into(h.gameImage);
+        }
         if (showDeleteButton){
             h.imageButton.setVisibility(View.VISIBLE);
             h.imageButton.setFocusable(false);
             h.imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("category_ID",getId(position));
-                    databaseReference.child("users").child(vkAuthUtils.getUserIdFromSharedPreferences()).child("categories").child(getId(position)).removeValue();
-                    categories.remove(position);
+                    Log.d("game_ID",Integer.toString(getId(position)));
+                    databaseReference.child("users").child(vkAuthUtils.getUserIdFromSharedPreferences()).child("categories").child(categoryId).child("games").child(Integer.toString(getId(position))).removeValue();
+                    databaseReference.child("users").child(vkAuthUtils.getUserIdFromSharedPreferences()).child("games").child(Integer.toString(getId(position))).child("categories").child(categoryId).removeValue();
+                    games.remove(position);
                     notifyDataSetChanged();
                 }
             });
